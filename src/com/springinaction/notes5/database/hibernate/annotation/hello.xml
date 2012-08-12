@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"   
+xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <!-- BasicDataSource from apache DBCP -->
+  	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+	  	<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+	  	<property name="url" value="jdbc:oracle:thin:@ST6093.serena.com:1521:DIM12" />
+	  	<property name="username" value="cm_typical" />
+	  	<property name="password" value="cm_typical" />
+	  	<property name="initialSize" value="5" />
+	  <property name="maxActive" value="10" />
+  	</bean>-->
+  
+    <!-- JDBC driver based datasource -->
+  	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+  		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+  		<property name="url" value="jdbc:oracle:thin:@ST6093.serena.com:1521:DIM12" />
+  		<property name="username" value="cm_typical" />
+  		<property name="password" value="cm_typical" />
+	</bean>
+	
+	<!-- Configure hibernate session factory bean. -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	  	<property name="dataSource" ref="dataSource" />
+	  	<property name="annotatedClasses">
+	    	<list>
+	      		<value>com.springinaction.notes5.database.hibernate.annotation.Employee</value>
+	    	</list>
+	  	</property>
+	  	<property name="hibernateProperties">
+	    	<props>
+	      		<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+	    	</props>
+	  	</property>
+	</bean>
+ 	
+ 	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+  		<constructor-arg name="sessionFactory" ref="sessionFactory"></constructor-arg>
+	</bean>
+
+	
+	<bean id="employeeTest" class="com.springinaction.notes5.database.hibernate.annotation.EmployeeTest">
+	<constructor-arg name="hibernateTemplate" ref="hibernateTemplate"></constructor-arg>
+	</bean>
+</beans>

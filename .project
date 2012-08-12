@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>zSpring3</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.quest.toadext.editors.project.ToadextProjectBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.hibernate.eclipse.console.hibernateBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>com.quest.toadext.ToadextNature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.hibernate.eclipse.console.hibernateNature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>classes</name>
+			<type>2</type>
+			<location>C:/apache-tomcat-6.0.33/webapps/spring3/WEB-INF/classes</location>
+		</link>
+		<link>
+			<name>spring3</name>
+			<type>2</type>
+			<location>C:/apache-tomcat-6.0.33/webapps/spring3</location>
+		</link>
+	</linkedResources>
+</projectDescription>

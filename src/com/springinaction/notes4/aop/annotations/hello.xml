@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"   
+xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+  
+ 	<bean id="greetingServiceImpl" class="com.springinaction.notes4.aop.annotations.GreetingServiceImpl"/>
+ 	
+  	<bean id="greetingAdvice" class="com.springinaction.notes4.aop.annotations.GreetingAdvice"></bean>
+  	
+  	<!-- Start: Annotated AOP. NOT WORKING -->
+  	<!-- <aop:aspectj-autoproxy/> --> 
+  	<!-- End: Annotated AOP. NOT WORKING -->
+  	
+  	
+  	<!-- Start : non annotated POJO AOP-->
+  	<!-- <aop:config>
+	    <aop:aspect ref="greetingAdvice">
+	      <aop:before method="beforeMethodInvocation" pointcut="execution(* *.sayGreeting(..))" />
+	      <aop:after-returning method="afterReturningFromMethod" pointcut="execution(* *.sayGreeting(..))" />
+	      <aop:after-throwing method="afterThrowingOutOfMethod" pointcut="execution(* *.sayGreeting(..))" />
+	    </aop:aspect>
+  	</aop:config>-->
+  	
+  	<!-- Start: Avoid repetition of point cut expression-->
+  	<aop:config>
+	    <aop:aspect ref="greetingAdvice">
+	      <aop:pointcut id="pointcutBean" expression="execution(* *.sayGreeting(..))" />
+	      <aop:before method="beforeMethodInvocation" pointcut-ref="pointcutBean" />
+	      <aop:after-returning method="afterReturningFromMethod" pointcut-ref="pointcutBean" />
+	      <aop:after-throwing method="afterThrowingOutOfMethod" pointcut-ref="pointcutBean" />
+	    </aop:aspect>
+  	</aop:config>
+  	<!-- End: Avoid repetition of point cut -->
+  	<!-- End : non annotated POJO AOP -->
+  	   
+</beans>

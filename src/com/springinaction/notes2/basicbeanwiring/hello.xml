@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:p="http://www.springframework.org/schema/p"   
+xmlns:context="http://www.springframework.org/schema/context" 
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+<context:annotation-config/> <!-- for annotation -->
+
+<context:component-scan base-package="com.springinaction.notes2.basicbeanwiring"> <!-- will do for annotations and auto discovery -->
+</context:component-scan>
+  
+  <!-- bean id="greetingService" class="com.springinaction.chapter01.hello.GreetingServiceImpl">
+    <property name="greeting" value="Buenos Dias!1" />
+  </bean>-->
+  
+  <bean name="autoWiredBean1" class="com.springinaction.notes2.basicbeanwiring.AutoWiredBean" >
+   	<qualifier value="autoWiredBean11"></qualifier><!-- can use this qualifier to autowire -->
+  </bean>
+  
+  <bean name="autoWiredBean2" class="com.springinaction.notes2.basicbeanwiring.AutoWiredBeanSubClass2">
+  	<qualifier value="autoWiredBean22"></qualifier><!-- can use this qualifier to autowire -->
+  </bean> 
+  
+  <bean id="anotherBean" class="com.springinaction.notes2.basicbeanwiring.AnotherBean" factory-method="init"></bean><!-- factory method to instantiate the bean -->
+  
+  <bean id="greetingService" class="com.springinaction.notes2.basicbeanwiring.GreetingServiceImpl" init-method="init" destroy-method="destroy"
+  p:myProperty="my property value1" p:innerBean-ref="anotherBean"> <!-- setup and tear down methods init and destroy -->
+  	
+  	<constructor-arg value="Buenos Dias!2" index="0" type="java.lang.String"/> <!-- index for position, type avoid ambiguity -->
+  	<!-- <constructor-arg ref="anotherBean" index="1" type="com.springinaction.notes2.basicbeanwiring.AnotherBean"></constructor-arg> -->  
+  	
+  	<constructor-arg >
+  		<bean class="com.springinaction.notes2.basicbeanwiring.AnotherBean"></bean><!-- inner bean -->
+  	</constructor-arg>
+  	
+  	<!-- <property name="myProperty" value="my property value"></property> --> <!-- used p: in the <bean> tag instead -->
+  	
+	<!-- inner bean example -->	
+  	<!-- used p:inner-ref instead -->
+  	<!-- <property name="innerBean">
+  		<bean class="com.springinaction.notes2.basicbeanwiring.AnotherBean"></bean>
+  	</property>	-->
+  	
+  	<property name="collection">
+  		<list>
+  			<value>1</value>
+  			<value>2</value>
+  			<ref bean="anotherBean"/>
+  			<ref bean="anotherBean"/>
+  			<null></null>
+  		</list>
+  	</property>
+	
+	<property name="set"><!-- duplicate filtered out -->
+  		<set>
+  			<value>1</value>
+  			<value>2</value>
+  			<value>2</value>
+  			<ref bean="anotherBean"/>
+  			<ref bean="anotherBean"/>
+  			<null></null>
+  		</set>
+  	</property>
+  	
+  	<property name="map">
+  		<map>
+  			<entry key="key1" value="value1"></entry>
+  			<entry key="key2" value="value2"></entry>
+  			<entry key-ref="anotherBean" value="anotherBean"></entry>
+  		</map>
+  	</property>
+  	
+  	<property name="properties">
+  		<props>
+  			<prop key="1">1</prop>
+  			<prop key="2">2</prop>
+  		</props>
+  	</property>
+  	
+   </bean>	
+   
+   <!-- custom property editor configuration -->
+   <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+  		<property name="customEditors">
+    		<map>
+      			<entry key="com.springinaction.notes2.basicbeanwiring.PhoneNumber">
+        			<bean id="phoneEditor" class="com.springinaction.notes2.basicbeanwiring.MyCustomPropertyEditor">
+        			</bean>
+      			</entry>
+    		</map>
+  		</property>
+   </bean> 
+
+</beans>

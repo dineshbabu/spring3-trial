@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
+	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	   	
+	 <mvc:annotation-driven/>
+	 
+	 <!-- will automtically discover and register bean -->
+	 <context:component-scan base-package="com.springinaction.notes6a.webrequests"/>
+	 
+	 <!-- To use Tiles view. DID  NOT USE -->
+	 <!-- <bean class="org.springframework.web.servlet.view.tiles2.TilesViewResolver"/>  -->
+	 
+	 <!-- To keep track of tiles definition. DID NOT USE -->
+	 <!-- <bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/views/views.xml</value>
+			</list>
+			</property>
+	</bean>-->
+
+	<!-- Start: BeanNameUrlHandlerMapping -->
+	<!--<bean name="/login.htm"  class="com.springinaction.notes6a.webrequests.LoginPageController">
+	</bean>-->
+	<!-- End: BeanNameUrlHandlerMapping -->
+	
+	<!-- Start : SimpleUrlHandlerMapping -->
+	<!-- <bean id="loginPageController"  class="com.springinaction.notes6a.webrequests.LoginPageController"></bean>
+	<bean id="simpleUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+  		<property name="mappings">
+		    <props>
+		      <prop key="/login.htm">loginPageController</prop>
+		    </props>
+  		</property>
+	</bean>-->
+	<!-- End : SimpleUrlHandlerMapping -->
+	
+	<!-- Start: ControllerClassNameHandlerMapping. Use /spring3/loginpage.htm in the uRL-->
+	<!-- <bean id="loginPageController"  class="com.springinaction.notes6a.webrequests.LoginPageController"></bean> 
+	<bean id="urlMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>-->
+	<!-- End:  ControllerClassNameHandlerMapping -->
+	
+	<!-- Start: Annotation used for URL mapping . NOT WORKING-->
+	<!-- <bean id="loginPageController"  class="com.springinaction.notes6a.webrequests.LoginPageController"></bean>
+	<bean id="urlMapping" class="org.springframework.web.servlet.handler.metadata.CommonsPathMapHandlerMapping"/> -->
+	<!-- End: Annotation used for URL mapping -->
+		
+	
+	
+	<!-- JDBC driver based datasource -->
+  	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+  		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+  		<property name="url" value="jdbc:oracle:thin:@ST6093.serena.com:1521:DIM12" />
+  		<property name="username" value="cm_typical" />
+  		<property name="password" value="cm_typical" />
+	</bean>
+	
+	<!-- Configure hibernate session factory bean. -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	  	<property name="dataSource" ref="dataSource" />
+	  	<property name="annotatedClasses">
+	    	<list>
+	      		<value>com.springinaction.notes6a.webrequests.persitence.User</value>
+	    	</list>
+	  	</property>
+	  	<property name="hibernateProperties">
+	    	<props>
+	      		<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+	    	</props>
+	  	</property>
+	</bean>
+ 	
+ 	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+  		<constructor-arg name="sessionFactory" ref="sessionFactory"></constructor-arg>
+	</bean>
+
+
+
+
+	<bean id="user" class="com.springinaction.notes6a.webrequests.User">
+	</bean>
+
+	<bean id="loginPageController" class="com.springinaction.notes6a.webrequests.LoginPageController">
+		<property name="hibernateTemplate" ref="hibernateTemplate"/>
+	</bean>	
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="order" value="0" />
+	</bean>
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	  <property name="prefix">
+		<value>/WEB-INF/views/</value>
+	  </property>
+	  <property name="suffix">
+		<value>.jsp</value>
+	  </property>
+	</bean>
+	
+	
+</beans>

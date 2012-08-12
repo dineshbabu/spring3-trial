@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class
+        name="com.springinaction.notes6a.webrequests.persitence.User"
+        table="login">
+        <id name="id" column="id">
+            <generator class="increment"/>
+        </id>
+        <property name="firstName" column="firstName"/>
+        <property name="lastName" column="lastName"/>
+        <property name="username" column="username"/>
+        <property name="email" column="email"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class
+        name="com.springinaction.notes5.database.hibernate.Employee"
+        table="EMPLOYEE">
+        <id name="id" column="id">
+            <generator class="increment"/>
+        </id>
+        <property name="name" column="NAME"/>
+        <property name="salary" column="salary"/>
+        <property name="manager" column="manager"/>
+        <property name="deptId" column="dept_id"/>
+        <property name="addrId" column="addr_id"/>
+        
+    </class>
+</hibernate-mapping>

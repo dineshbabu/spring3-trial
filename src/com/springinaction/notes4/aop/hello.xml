@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"   
+xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+  
+ 	<bean id="greetingServiceImplTarget" class="com.springinaction.notes4.aop.GreetingServiceImpl"/>
+  	
+  	<!-- Start: classic AOP -->
+  	
+  	<!-- Declaring advisor bean -->
+  	<bean id="greetingServiceAdvisor" class="com.springinaction.notes4.aop.GreetingServiceAdvisor">
+  		<property name="greetingServiceImpl" ref="greetingServiceImplTarget"></property>  		
+  	</bean>
+  	
+  	<!-- Declaring around advisor bean -->
+  	<bean id="greetingServiceAroundAdvisor" class="com.springinaction.notes4.aop.GreetingServiceAroundAdvisor">
+  		<property name="greetingServiceImpl" ref="greetingServiceImplTarget"></property>  		
+  	</bean>
+  	
+  	<!-- Declaring point cuts -->
+    <bean id="greetingPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+  		<property name="pattern" value=".*sayGreeting" />
+	</bean>
+	
+	<!-- Declaring aspect = advice + pointcut -->
+	<bean id="greetingAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+  		<!-- <property name="advice" ref="greetingServiceAdvisor"/>  --> <!-- normal advisor -->
+  		<property name="advice" ref="greetingServiceAroundAdvisor"/> <!-- Around advisor --> 
+  		<property name="pointcut" ref="greetingPointcut" />
+	</bean>
+	
+	<!-- Start: you can combine advisor and point cut together as below  -->
+	<!-- <bean id="greetingAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+  		<property name="advice" ref="greetingServiceAroundAdvisor"/> 
+ 		<property name="pattern" value=".*sayGreeting" />
+	</bean> -->
+	<!-- End: you can combine advisor and point cut together   -->
+
+	<!-- Start : usage of AspectJ reg experession instead of Jdk reg expression -->
+	<!-- <bean id="greetingPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+  		<property name="expression" value="execution(*.sayGreeting)" />
+	</bean>
+	
+	<bean id="greetingAdvisor" class="org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
+  		<property name="advice" ref="greetingServiceAdvisor" />
+  		<property name="expression" value="execution(* *.sayGreeting(..))" />
+	</bean>-->
+	<!-- End : usage of AspectJ reg experession instead of Jdk reg expression -->
+		
+   	<bean id="greetingServiceImpl" class="org.springframework.aop.framework.ProxyFactoryBean">
+  		<property name="target" ref="greetingServiceImplTarget" />
+  		<property name="interceptorNames" value="greetingAdvisor" />
+  		<property name="proxyInterfaces" value="com.springinaction.notes4.aop.GreetingService" />
+	</bean>
+	
+	<!-- Start: Use of proxy -->
+	
+   	
+	<!-- End: classic AOP -->
+
+	<!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />-->
+	
+	<!--<aop:config>
+		<aop:aspect ref="greetingServiceAdvisor">
+		<aop:before pointcut="execution(*com.springinaction.notes4.aop.GreetingServiceImpl.sayGreeting(..))" method="beforeMethodInvocation" />
+		<aop:after-returning pointcut="execution(*com.springinaction.notes4.aop.GreetingServiceImpl.sayGreeting(..))" method="afterReturningFromMethod" />
+		<aop:after-throwing pointcut="execution(*com.springinaction.notes4.aop.GreetingServiceImpl.sayGreeting(..))" method="afterThrowingOutOfMethod" />
+		</aop:aspect>
+	</aop:config>-->
+   
+</beans>

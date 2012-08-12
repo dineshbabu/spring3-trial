@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:p="http://www.springframework.org/schema/p"   
+xmlns:context="http://www.springframework.org/schema/context" 
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+  
+  <bean id="greetingServiceParent" class="com.springinaction.chapter01.hello.GreetingService" abstract="true" >
+    <property name="greeting" value="Greetings from Parent" />
+  </bean>
+  
+  <bean id="ParentAbstractBean" abstract="true">
+  	<property name="propertyFromParentAbstractBean" value="propertyFromParentAbstractBean"></property>
+  </bean>
+  
+  <bean id="basicMethodReplacer" class="com.springinaction.notes3.advancedbeanwiring.MethodReplacerBean">
+  </bean>
+  
+  <!-- <bean id="greetingService" class="com.springinaction.notes3.advancedbeanwiring.GreetingServiceImpl" parent="greetingServiceParent">--><!-- bean parent --> 
+  <bean id="greetingService" class="com.springinaction.notes3.advancedbeanwiring.GreetingServiceImpl" parent="ParentAbstractBean"> <!-- non bean parent -->
+  	<replaced-method name="replaceThisMethodBasic" replacer="basicMethodReplacer"></replaced-method>
+   </bean>
+   
+   <!-- Start : load external properties file -->
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	   <property name="locations">
+	    <list>
+	      <value>jdbc1.properties</value>
+	      <value>jdbc2.properties</value>
+	    </list>
+	   </property>
+   </bean>	
+   
+   <bean name="externaliseProperty" class="com.springinaction.notes3.advancedbeanwiring.ExternaliseProperty">
+	   <property name="jdbc_url" value="${jdbc_url}" />
+	   <property name="jdbc_user_name" value="${jdbc_user_name}" />
+	   <property name="jdbc_password" value="${jdbc_password}" />
+	   <property name="jdbc_database" value="${jdbc_database}" />
+	   
+	   <constructor-arg index="0" name="jdbc_database" value="${jdbc_database}"></constructor-arg>
+	   <constructor-arg index="1" name="jdbc_password" value="${jdbc_password}"></constructor-arg>
+	   <constructor-arg index="2" name="jdbc_url" value="${jdbc_url}"></constructor-arg>
+	   <constructor-arg index="3" name="jdbc_user_name" value="${jdbc_user_name}"></constructor-arg>
+   </bean>
+   
+   <!-- End : load external properties file -->
+   
+   <!-- Start : i18n -->
+   <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+   		<property name="basename">
+    		<value>trainingtext</value>
+  		</property>
+	</bean>
+   <!-- End : i18n -->
+   
+   <!-- Start: Event publisher -->
+   <bean name="eventPublisher" class="com.springinaction.notes3.advancedbeanwiring.EventPublisher">
+   		<constructor-arg name="source" ref="greetingService" index="0"></constructor-arg>
+   		<constructor-arg name="message" value="new message set by publisher" index="1"></constructor-arg>
+   </bean>
+   
+   <bean name="eventListener" class="com.springinaction.notes3.advancedbeanwiring.EventListener"></bean>
+   <!-- End: Event publisher -->
+   
+   
+</beans>
